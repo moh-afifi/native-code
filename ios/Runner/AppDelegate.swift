@@ -5,34 +5,27 @@ import Flutter
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
- let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-      let channel = FlutterMethodChannel(name: "com.test.test/count",   binaryMessenger: controller.binaryMessenger)
-      channel.setMethodCallHandler({
-           (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+    let channel = FlutterMethodChannel(name: "samples.flutter.dev/counter",
+                                           binaryMessenger: controller.binaryMessenger)
+    channel.setMethodCallHandler({
+      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+     guard call.method == "getSum" else {
+                   result(FlutterMethodNotImplemented)
+                   return
+               }
 
-        switch call.method {
+               result(self?.getSum())
+    })
 
-        case "getSum":
-        result(self?.getSum())
-
-        default:
-          result(FlutterMethodNotImplemented)
-
-        }
-
-
-      })
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-
-
   }
 
-private func getSum() -> Int {
-    return 2 + 2
- }
-
+  private func getSum() -> Int {
+      return 2 + 2
+   }
 }
+
